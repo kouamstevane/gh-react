@@ -1,0 +1,17 @@
+name: Test React App
+on: 
+    workflow_dispatch:
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: code
+              uses: actions/checkout@v3
+            - name: install node v22.12.0
+              uses: actions/setup-node@v3
+              with:
+                node-version: 22.12.0
+            - name: install dependencies
+              run: npm ci
+            - name: run tests
+              run: npm run test
