@@ -1,0 +1,23 @@
+name: Build and Deploy # Nom du workflow GitHub Actions
+on: [workflow_dispatch] # Déclenchement du workflow à chaque push
+permissions: # Permissions minimales nécessaires au workflow
+  contents: write # Autorise l'écriture sur le dépôt (push vers gh-pages)
+jobs: # Déclaration des jobs du workflow
+  build-and-deploy: # Job unique pour construire et déployer
+    concurrency: ci-${{ github.ref }}  # Évite les exécutions concurrentes sur la même ref
+    runs-on: ubuntu-latest # VM GitHub hébergée
+    steps: # Liste des étapes du job
+      - name: Checkout 🛎️ # Récupère le code du dépôt
+        uses: actions/checkout@v4 # Action officielle pour cloner le dépôt
+
+      # Étape suivante: installation des dépendances et build
+      - name: Install and Build  # Installe les dépendances et construit l'application
+        run: | # Exécute un script multi-lignes
+          npm ci # Installe les dépendances en mode CI (rapide et reproductible)
+          npm run build # Construit l'application (génère le dossier build/)
+
+      # Déploiement sur GitHub Pages
+      - name: Deploy 🚀 # Déploie la build sur GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4 # Action de déploiement vers gh-pages
+        with: # Paramètres de l'action de déploiement
+          folder: build # Dossier à publier sur la branche gh-pages
