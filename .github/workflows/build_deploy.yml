@@ -1,5 +1,5 @@
 name: Build and Deploy # Nom du workflow GitHub Actions
-on: [workflow_dispatch] # Déclenchement du workflow à chaque push
+on: [push] # Déclenchement du workflow à chaque workflow_dispatch
 permissions: # Permissions minimales nécessaires au workflow
   contents: write # Autorise l'écriture sur le dépôt (push vers gh-pages)
 jobs: # Déclaration des jobs du workflow
@@ -16,8 +16,15 @@ jobs: # Déclaration des jobs du workflow
           npm ci # Installe les dépendances en mode CI (rapide et reproductible)
           npm run build # Construit l'application (génère le dossier build/)
 
+      - name: Prepare Pages artifacts # Ajoute fallback SPA et désactive Jekyll
+        run: |
+          cp build/index.html build/404.html # Fallback pour routes côté client
+          touch build/.nojekyll # Empêche le traitement Jekyll de GitHub Pages
+
       # Déploiement sur GitHub Pages
       - name: Deploy 🚀 # Déploie la build sur GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4 # Action de déploiement vers gh-pages
         with: # Paramètres de l'action de déploiement
+          branch: gh-pages # Branche cible pour GitHub Pages
           folder: build # Dossier à publier sur la branche gh-pages
+          clean: true # Nettoie la branche avant déploiement

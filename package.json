@@ -2,6 +2,7 @@
   "name": "fm-react-gh",
   "version": "0.1.0",
   "private": true,
+  "homepage":"https://kouamstevane.github.io/gh-react",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.7.0",
